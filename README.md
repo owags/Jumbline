@@ -10,3 +10,6 @@ We are a team of four that has little experience in assembly language.
 Thankfully we have the entire internet at our disposal so it shoudn't be too hard.
 Below you will find a general changelog for large version changes.
 Smaller updates will most likely be found with the appropriate subfolders (subject to change).
+
+
+Hellllooo: Grant!
