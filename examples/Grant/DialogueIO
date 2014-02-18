@@ -1,0 +1,31 @@
+.text
+main:
+la $a0, intro	#load intro to output
+li $v0, 50	#will syscall confirmdialog
+syscall
+
+beq $a0, 1, end
+beq $a0, 2, end
+
+la $a0, message
+la $a1, input
+li $a2, 21
+
+li $v0, 54
+syscall
+
+la $a0, input
+li $a1, 1
+
+li $v0, 55
+syscall
+
+end:
+li $v0, 10
+syscall
+
+.data
+
+input:		.space 21
+message: 	.asciiz "Please input desired string (20 char max)"
+intro:		.asciiz "Would you like to input data?"
