@@ -1,7 +1,7 @@
 .text
 
 main:
-la $a0, HowMany		# set string for dialogue
+la $a0, HowMany		# set string for dialog
 li $v0, 51		# InputDialogInt
 syscall
 
@@ -37,7 +37,7 @@ j exit
 # ******************************************
 
 intOutOfRange:
-la $a0, IOOR		# set string for dialogue IOOR
+la $a0, IOOR		# set string for dialog IOOR
 li $v0, 50		# ConfirmDialog
 syscall
 
@@ -46,7 +46,7 @@ j main			# else: start over
 
 
 intBadParse:
-la $a0, IBP		# set string for dialogue IBP
+la $a0, IBP		# set string for dialog IBP
 li $v0, 50		# ConfirmDialog
 
 bgtz $a0, exit		# if select (no or cancel), exit
@@ -54,7 +54,7 @@ j main			# else: start over
 
 
 noInput:
-la $a0, NoInp		# set string for dialogue IOOR
+la $a0, NoInp		# set string for dialog IOOR
 li $v0, 50		# ConfirmDialog
 syscall
 
