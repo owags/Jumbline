@@ -10,10 +10,12 @@ void main ()
 	int		n;
 	int		r;
 	char *	letters;
-	cout	<< "How many letters would you like generated? (Max 7): " << endl;
-	cin		>> n;
+	
+	cout << "How many letters would you like generated? (Max 7): " << endl;
+	cin >> n;
 
-	cout	<< "Generating " << n << " letters..." << endl;
+	cout << "Generating " << n << " letters..." << endl;
+	
 	letters = new char [n];
 	srand ((unsigned)time(NULL));
 
