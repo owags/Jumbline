@@ -33,7 +33,7 @@ syscall
 j exit
 
 # ******************************************
-# Below are precaution for input error and exit function
+# Below are precautions for input error and exit function
 # ******************************************
 
 intOutOfRange:
