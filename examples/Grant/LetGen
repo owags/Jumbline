@@ -1,0 +1,50 @@
+.text
+
+main:
+la $a0, HowMany		#set string for dialogue
+li $v0, 51		#InputDialogInt
+syscall
+
+ble $a0, 0, intOutOfRange	#branch if input out of range
+bgt $a0, 7, intOutOfRange
+beq $a1, -1, intBadParse	#branch IntDialog error -1
+beq $a1, -2, exit		#cancel was selected: exit
+beq $a1, -3, noInput		#no value stored
+
+
+intOutOfRange:
+la $a0, IOOR		#set string for dialogue IOOR
+li $v0, 50		#ConfirmDialog
+syscall
+
+bgtz $a0, exit		#if select (no or cancel), exit
+b main			#else: start over
+
+
+intBadParse:
+la $a0, IBP		#set string for dialogue IBP
+li $v0, 50		#ConfirmDialog
+
+bgtz $a0, exit		#if select (no or cancel), exit
+b main			#else: start over
+
+
+noInput:
+la $a0, NoInp		#set string for dialogue IOOR
+li $v0, 50		#ConfirmDialog
+syscall
+
+bgtz $a0, exit		#if select (no or cancel), exit
+b main			#else: start over
+
+
+exit:
+li $v0, 10
+syscall
+
+.data
+
+HowMany: 	.asciiz "How many letters would you like generated? (Max 7)"
+IOOR:		.asciiz "Integer enetered is out of range. Try again?"
+IBP:		.asciiz "Error -1: input data cannot be correctly parsed"
+NoInp:		.asciiz "Woops! you didn't enter anything, Try again?"
