@@ -8,7 +8,6 @@ li $v0, 11
 syscall
 
 addi $t0, $t0, 1
-
 j Runloop
 
 Endloop:

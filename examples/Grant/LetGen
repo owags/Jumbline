@@ -1,41 +1,65 @@
 .text
 
 main:
-la $a0, HowMany		#set string for dialogue
-li $v0, 51		#InputDialogInt
+la $a0, HowMany		# set string for dialogue
+li $v0, 51		# InputDialogInt
 syscall
 
-ble $a0, 0, intOutOfRange	#branch if input out of range
-bgt $a0, 7, intOutOfRange
-beq $a1, -1, intBadParse	#branch IntDialog error -1
-beq $a1, -2, exit		#cancel was selected: exit
-beq $a1, -3, noInput		#no value stored
+ble $a0, 0, intOutOfRange	# branch if input out of range
+bgt $a0, 7, intOutOfRange	# branch if input out of range
+beq $a1, -1, intBadParse	# branch IntDialog error -1
+beq $a1, -2, exit		# cancel was selected: exit
+beq $a1, -3, noInput		# no value stored
 
+la $s0, Letters
+add $s1, $a0, $s0		# $s1 the address after the last letter
+
+Generator: 			# Generator loop
+li $a1, 26			# Load upper bound of random integer range
+li $v0, 42			# load syscall random int range
+syscall				# random integer will be stored in $a0
+
+add $t0, $a0, 65		# 65 is the ascii offset of letters in decimal form (ASCII Table) + random int from 0 <= x < 26
+sb $t0, 0($s0)			# save bit in letters address
+add $s0, $s0, 1			# calculate address for next letter
+blt $s0, $s1, Generator		# checking if we've reached our last address for loop
+
+Output:
+la $a0, Letters
+li $a1, 1
+li $v0, 55
+syscall
+
+j exit
+
+# ******************************************
+# Below are precaution for input error and exit function
+# ******************************************
 
 intOutOfRange:
-la $a0, IOOR		#set string for dialogue IOOR
-li $v0, 50		#ConfirmDialog
+la $a0, IOOR		# set string for dialogue IOOR
+li $v0, 50		# ConfirmDialog
 syscall
 
-bgtz $a0, exit		#if select (no or cancel), exit
-b main			#else: start over
+bgtz $a0, exit		# if select (no or cancel), exit
+j main			# else: start over
 
 
 intBadParse:
-la $a0, IBP		#set string for dialogue IBP
-li $v0, 50		#ConfirmDialog
+la $a0, IBP		# set string for dialogue IBP
+li $v0, 50		# ConfirmDialog
 
-bgtz $a0, exit		#if select (no or cancel), exit
-b main			#else: start over
+bgtz $a0, exit		# if select (no or cancel), exit
+j main			# else: start over
 
 
 noInput:
-la $a0, NoInp		#set string for dialogue IOOR
-li $v0, 50		#ConfirmDialog
+la $a0, NoInp		# set string for dialogue IOOR
+li $v0, 50		# ConfirmDialog
 syscall
 
-bgtz $a0, exit		#if select (no or cancel), exit
-b main			#else: start over
+bgtz $a0, exit		# if select (no or cancel), exit
+j main			# else: start over
 
 
 exit:
@@ -48,3 +72,8 @@ HowMany: 	.asciiz "How many letters would you like generated? (Max 7)"
 IOOR:		.asciiz "Integer enetered is out of range. Try again?"
 IBP:		.asciiz "Error -1: input data cannot be correctly parsed"
 NoInp:		.asciiz "Woops! you didn't enter anything, Try again?"
+	
+Letters:	.space 8
+
+
+
