@@ -5,11 +5,12 @@ la $a0, HowMany		# set string for dialog
 li $v0, 51		# InputDialogInt
 syscall
 
+beq $a1, -3, noInput		# no value stored
 ble $a0, 0, intOutOfRange	# branch if input out of range
 bgt $a0, 7, intOutOfRange	# branch if input out of range
 beq $a1, -1, intBadParse	# branch IntDialog error -1
 beq $a1, -2, exit		# cancel was selected: exit
-beq $a1, -3, noInput		# no value stored
+
 
 la $s0, Letters
 add $s1, $a0, $s0		# $s1 the address after the last letter
