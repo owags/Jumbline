@@ -20,4 +20,4 @@ syscall
 
 HEX:	.word 0xa
 	.word 0x14
-	.word 0x32
+	.word 0x28
