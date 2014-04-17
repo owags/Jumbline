@@ -21,6 +21,12 @@ li $v0, 4
 syscall
 .end_macro
 
+.macro printChar(%reg)
+move $a0, %reg
+li $v0, 11
+syscall
+.end_macro 
+
 #Get an integer input
 .macro getInt(%reg)
 li $v0, 5
@@ -33,5 +39,11 @@ move %reg, $v0
 move $a0, %reg
 move $a1, %max
 li $v0, 8
+syscall
+.end_macro
+
+#End program
+.macro exit
+li $v0, 10
 syscall
 .end_macro
