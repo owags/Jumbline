@@ -6,7 +6,7 @@
 #				= 1 if Equal,
 #				= 0 if NOT equal
 #
-#REGISTERS USED		$t0	$t1	$t2	$t3	$a0	$a1	
+#REGISTERS USED		$t0	$t1	$t2	$t3	$a0	$a1	$v0	
 #
 ###############################################################################
 compareword:
