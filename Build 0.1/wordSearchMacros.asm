@@ -257,6 +257,9 @@ sw $s1, 0($s0)
 
 
 .macro wordSearch
+la $s0, wbCount
+sw $zero, 0($s0)
+
 _search:
 nextWord
 dictEOF($v0)
@@ -265,7 +268,20 @@ validWord($v0)
 beqz $v0, _search
 printWord
 saveWord
+la $s0, wbCount
+lw $s1, 0($s0)
+bgt $s1, 20, reGenLet
+j _search
+
+reGenLet:
+letGenStatic
+la $s0, wbCount
+sw $zero, 0($s0)
+la, $s0, curOffset
+sw $zero, 0($s0)
 j _search
 
 _return:
+la, $s0, curOffset
+sw $zero, 0($s0)
 .end_macro
