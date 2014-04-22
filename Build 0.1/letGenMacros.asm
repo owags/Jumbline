@@ -3,11 +3,9 @@
 #	$s0 = Address of letters in dataMIPS.asm
 #
 .macro letGen
-subi $sp, $sp, 16
+subi $sp, $sp, 8
 sw $s0, 0($sp)
 sw $s1, 4($sp)
-sw $t0, 8($sp)
-sw $t1, 12($sp)
 
 # Get number of letters
 LG_input:
@@ -58,9 +56,7 @@ LG_Generator:
 	
 lw $s0, 0($sp)
 lw $s1, 4($sp)
-lw $t0, 8($sp)
-lw $t1, 12($sp)
-addi $sp, $sp, 16
+addi $sp, $sp, 8
 .end_macro
 
 
