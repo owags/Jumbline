@@ -24,8 +24,10 @@ compareword:
 
 	done:
 		li $v0, 1
-		jr $ra	
+		#jr $ra
+		j finished
 	wrong:
 		li $v0, 0
-		jr $ra
+		#jr $ra
+	finished:
 ##########################################################################
