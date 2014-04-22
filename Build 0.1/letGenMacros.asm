@@ -3,6 +3,12 @@
 #	$s0 = Address of letters in dataMIPS.asm
 #
 .macro letGen
+subi $sp, $sp, 16
+sw $s0, 0($sp)
+sw $s1, 4($sp)
+sw $t0, 8($sp)
+sw $t1, 12($sp)
+
 # Get number of letters
 LG_input:
 	getIntDialog($v0)
@@ -49,6 +55,12 @@ LG_Generator:
 	add $t1, $t1, $a0		# adjust the address for random vowel
 	lb $t0, 0($t1)			# retrieve random vowel
 	sb $t0, 0($s0)			# store vowel as last letter
+	
+lw $s0, 0($sp)
+lw $s1, 4($sp)
+lw $t0, 8($sp)
+lw $t1, 12($sp)
+addi $sp, $sp, 16
 .end_macro
 
 

@@ -257,6 +257,13 @@ sw $s1, 0($s0)
 
 
 .macro wordSearch
+subi $sp, $sp, 20
+sw $s0, 0($sp)
+sw $s1, 4($sp)
+sw $s2, 8($sp)
+sw $t0, 12($sp)
+sw $t1, 16($sp)
+
 la $s0, wbCount
 sw $zero, 0($s0)
 
@@ -284,4 +291,12 @@ j _search
 _return:
 la, $s0, curOffset
 sw $zero, 0($s0)
+
+
+lw $s0, 0($sp)
+lw $s1, 4($sp)
+lw $s2, 8($sp)
+lw $t0, 12($sp)
+lw $t1, 16($sp)
+addi $sp, $sp, 20
 .end_macro
