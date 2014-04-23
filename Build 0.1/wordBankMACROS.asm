@@ -19,6 +19,27 @@ lw $t1, 4($sp)
 addi $sp, $sp, 8
 .end_macro
 
+# Called if the input matches a given word in the word bank
+# This will set the words current position to guessed with the boolcheck
+#	1 = word hasn't been guessed
+#	0 = word already guessed
+.macro wlSetBool(%bool)
+lw $t0, wbBuffOff($zero)
+div $t1, $t0, 7
+lb $t0, wlBoolCheck($t1)
+bnez $t0, alreadyGuessed
+addi $t0, $t0, 1
+sb $t0, wlBoolCheck($t1)
+j wlsb_return
+
+alreadyGuessed:
+add $t0, $zero, $zero
+j wlsb_return
+
+wlsb_return:
+move %bool, $t0
+.end_macro
+
 # gets the next word in the wordBank
 #	return 0 if there was nothing read (end of word bank)
 #	return 1 if read was successful
@@ -104,7 +125,7 @@ addi $sp, $sp, 12
 .end_macro
 
 # Iterates through the word bank and tallies the lengths of each word
-# This will be used to handle the words left tracker
+# This will be used to initialize the words left tracker
 .macro TallyLengths
 subi $sp, $sp, 12
 
@@ -138,6 +159,32 @@ bwl_return:
 move %length, $t1
 .end_macro
 
-.macro compareInput
+# With the input recieved this will iterate through the wordBank
+# looking for a matching word
+#	0 = no match
+#	1 = MATCH!
+.macro compareInput(%bool)
+ci_loop:
+nextBankWord($v0)
+beqz $v0, ci_noMatch
+compWord($v0)
+beq $v0, 1, ci_match
+j ci_loop
 
+ci_noMatch:
+add $t0, $zero, $zero
+j ci_return
+
+ci_match:
+wlSetBool($v0)
+beqz $v0, ci_loop
+bankWordLength($v0)
+lb $t0, wordsLeft($v0)
+subi $t0, $t0, 1
+sb $t0, wordsLeft($v0)
+addi $t0, $zero, 1
+j ci_return
+
+ci_return:
+move %bool, $t0
 .end_macro
