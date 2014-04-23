@@ -1,5 +1,6 @@
 #Intructions Screen
 
+
 .data
 
 Instructions: .ascii "GOAL OF GAME: \n"
@@ -11,8 +12,9 @@ Instructions: .ascii "GOAL OF GAME: \n"
 Null2: .asciiz ""
 
 .text
+li $v0, 59
 la $a0, Instructions
-li $v0, 4
+la $a1, Null2
 syscall
 
-
+.include "Let Gen Biased.asm"
