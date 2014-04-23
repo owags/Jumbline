@@ -1,10 +1,13 @@
 .data
-wordBank:	.space	140
+wordBank:	.space	147
 wbCount:	.word	0
 
 letters:	.space	7
 lCount:		.word	0
 
-inputBuffer: .space 7
+inputBuffer: 	.space 7
+wbBuffer:	.space 7
+wbBuffOff:	.word 0
 
-wordsLeft: .space 6
+wordsLeft: 	.space 6
+wlBoolCheck:	.space 20
