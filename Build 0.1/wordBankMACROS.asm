@@ -1,11 +1,11 @@
 # this will print the word bank
 .macro printWordBank
-addi $t0, $zero, $zero
+li $t0, 0
 
 pwb_loop:
 lb $t1, wordBank($t0)
 addi $t0, $t0, 1
-pintChar($t1)
+printChar($t1)
 blt $t0, 140, pwb_loop
 .end_macro
 
