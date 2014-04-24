@@ -71,7 +71,7 @@ Input: 			.space 8
 
 
 				
-.macro ValidateGuessInput
+.macro validateGuessInput
 
 	clearArrays	#macro to clear all arrays
 	
