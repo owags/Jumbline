@@ -1,3 +1,14 @@
+# this will print the word bank
+.macro printWordBank
+addi $t0, $zero, $zero
+
+pwb_loop:
+lb $t1, wordBank($t0)
+addi $t0, $t0, 1
+pintChar($t1)
+blt $t0, 140, pwb_loop
+.end_macro
+
 
 # This will reset a bool check for which words have been guessed
 #	1 = guessed
