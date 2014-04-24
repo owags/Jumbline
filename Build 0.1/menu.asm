@@ -27,7 +27,7 @@ CoverScreen: 	.ascii "\n      _________________________________________________ 
 	.ascii "    \\_________________________________________________/     \n"
 	.asciiz "            \\_______________________________________/             \n"
 	
-OPTIONS: .ascii "\n\n1. Play game\n"
+OPTIONS: .ascii "\n\n\n\n\n1. Play game\n"
 	.ascii "2. View instructions\n"
 	.ascii "0. Quit\n"
 	.asciiz ">>"

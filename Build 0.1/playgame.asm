@@ -65,14 +65,15 @@ li $a1, 7
 li $v0, 8
 syscall
 
-la $a0, inputBuffer
+la $s0, inputBuffer
 li $v0, 4
 syscall
 
 
 #Check for zero to stop
-lw $t0, inputBuffer
-beqz $t0, PG_end
+la $t0, inputBuffer
+lw $t1, 0($t0)
+beq $t1, 48, PG_end
 
 #Loop through words to check
 lw $s5, wbCount
