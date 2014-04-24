@@ -8,6 +8,7 @@ PG_newline: .asciiz "\n"
 .text
 letGen
 wordSearch
+printWordBank
 TallyLengths
 
 #Push saved registers onto stack
