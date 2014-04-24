@@ -3,10 +3,11 @@
 .include "data.asm"
 .include "letGenMacros.asm"
 .include "wordSearchMacros.asm"
+.include "wordBankMACROS.asm"
 
 .data
-Null: 	.asciiz ""
-CoverScreen: 	.ascii "\n      _________________________________________________       \n"
+M_Null: 	.asciiz ""
+M_CoverScreen: 	.ascii "\n      _________________________________________________       \n"
 	.ascii "    /                                                                                \\      \n"
 	.ascii "   |    _____________________________________________     |     \n"
 	.ascii "   |   |                                                                         |    |     \n"
@@ -27,11 +28,11 @@ CoverScreen: 	.ascii "\n      _________________________________________________ 
 	.ascii "    \\_________________________________________________/     \n"
 	.asciiz "            \\_______________________________________/             \n"
 	
-OPTIONS: .ascii "\n\n\n\n\n1. Play game\n"
+M_OPTIONS: .ascii "\n\n\n\n\n1. Play game\n"
 	.ascii "2. View instructions\n"
 	.ascii "0. Quit\n"
 	.asciiz ">>"
-INVALID: .asciiz "Not a valid choice.\n"
+M_INVALID: .asciiz "Not a valid choice.\n"
 	
 	
 
@@ -41,36 +42,36 @@ dictToMem
 
 #Display main splash screen
 li $v0, 59
-la $a0, CoverScreen
-la $a1, Null
+la $a0, M_CoverScreen
+la $a1, M_Null
 syscall
 
 #Main program loop
-MAIN:
-la $a0, OPTIONS
+M_MAIN:
+la $a0, M_OPTIONS
 printStr($a0)
 
 li $v0, 5
 syscall
 move $t0, $v0
 
-beq $t0, 1, PLAYGAME
-beq $t0, 2, INSTRUCTIONS
-beq $t0, 0, QUIT
+beq $t0, 1, M_PLAYGAME
+beq $t0, 2, M_INSTRUCTIONS
+beq $t0, 0, M_QUIT
 
-la $a0, INVALID
+la $a0, M_INVALID
 printStr($a0)
-j MAIN
+j M_MAIN
 
-PLAYGAME:
+M_PLAYGAME:
 .include "playgame.asm"
-j MAIN
+j M_MAIN
 
 
-INSTRUCTIONS:
+M_INSTRUCTIONS:
 .include "instructions.asm"
-j MAIN
+j M_MAIN
 
-QUIT:
+M_QUIT:
 li $v0, 10
 syscall

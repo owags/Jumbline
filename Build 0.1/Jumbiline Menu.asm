@@ -32,6 +32,6 @@ la $a0, CoverScreen
 la $a1, Null
 syscall
 
-.include "Instructions.asm"
+
 
 

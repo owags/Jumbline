@@ -8,41 +8,14 @@ PG_newline: .asciiz "\n"
 .text
 letGen
 wordSearch
+printWordBank
+TallyLengths
 
 #Push saved registers onto stack
 sw $s0, 0($sp)
 sw $s1, -4($sp)
 addi $sp, $sp, -8
 
-#Determines how many n-letter words are in field
-#la $s0, wordsLeft
-#li $t0, 6
-#NCALC:
-#li $t0, 6
-#beqz $t0, MAIN
-
-#MAINLOOP:
-#la $s0, letters	#Load address of letters field
-#li $t0, 7
-
-#Print out remaining n-letter words
-#PRINTLOOP:	#Print letters field
-#beqz $t0, PRINTBANK
-#lb $a0, 0($s0)
-#li $v0, 11
-#syscall
-#addi $t0, $t0, -1
-#addi $s0, $s0, 1
-#j PRINTLOOP
-
-
-#PRINTBANK:
-#li $a0, 10	#Print newline after letters
-#li $v0, 11
-#syscall
-
-#la $s0, wordBank
-#lw $t0, wbCount
 
 #Print out game info
 la $a0, letters
@@ -65,33 +38,25 @@ li $a1, 7
 li $v0, 8
 syscall
 
-la $s0, inputBuffer
+printWordBank
+
+la $a0, inputBuffer
 li $v0, 4
 syscall
 
 
 #Check for zero to stop
-la $t0, inputBuffer
-lw $t1, 0($t0)
+lb $t1, inputBuffer($zero)
 beq $t1, 48, PG_end
 
-#Loop through words to check
-lw $s5, wbCount
-la $s7, wordBank	#Load starting point of word bank
-li $s4, 0		#Counter for words compared
+#Call macro to check for match
+compareInput($v0)
 
-PG_loop:
-la $a0, inputBuffer
-move $a1, $s7
-.include "compareWord.asm"
-beq $v0, 1, PG_correct	#If guess was in bank
+move $a0, $v0
+li $v0, 1
+syscall
 
-#Otherwise keep going
-beq $s5, $s4, PG_incorrect	#If at end of bank and no correct so far
-addi $s4, $s4, 1	#Increment counter
-addi $s7, $s7, 7	#increment address by 7 characters
-
-j PG_loop
+beqz $a0, PG_incorrect
 
 #Print correct word prompt
 PG_correct:

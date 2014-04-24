@@ -228,17 +228,17 @@ blt $s0, $s1, zeroLoop
 
 
 .macro saveWord
-subi $sp, $sp, 4
-la $s0, wbCount
-lw $s1, 0($s0)
-li $s0, 7
-mult $s1, $s2
-mflo $s1
-la $s0, wordBank
+subi $sp, $sp, 4	# decrenent by 4 for stack
+la $s0, wbCount		# load address
+lw $s1, 0($s0)		# load current word bank count
+li $s0, 7		# li immediate 7
+mult $s1, $s2		# multiply 7 * wbCount
+mflo $s1		# retreive from lo
+la $s0, wordBank	# load word bank
 add $s0, $s1, $s0	# Address of wordBank with offset
-addi $s1, $s0, 7
-sw $s1, 0($sp)
-la $s1, curWord
+addi $s1, $s0, 7	# find the end address
+sw $s1, 0($sp)		# save end addr in stack
+la $s1, curWord		# load curWord
 
 SW_loop:
 lb $s2, 0($s1)
@@ -246,7 +246,7 @@ addi $s1, $s1, 1
 sb $s2, 0($s0)
 addi $s0, $s0, 1
 lw $s2, 0($sp)
-blt $s1, $s2, SW_loop
+blt $s0, $s2, SW_loop
 
 la $s0, wbCount
 lw $s1, 0($s0)

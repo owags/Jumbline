@@ -111,4 +111,4 @@ vowel:		.word 65	# A
 		.word 79	# 0
 		.word 85	# u
 		
-.include "Guess Input Validate.asm"
+
