@@ -47,3 +47,10 @@ syscall
 li $v0, 10
 syscall
 .end_macro
+
+#print newline character
+.macro endl
+li $a0, 10
+li $v0, 11
+syscall
+.end_macro

@@ -1,9 +1,5 @@
 #Intructions Screen
 
-.include "utilityMacros.asm"
-.include "letGenMacros.asm"
-.include "data.asm"
-
 .data
 
 Instructions: .ascii "GOAL OF GAME: \n"
@@ -19,9 +15,6 @@ li $v0, 59
 la $a0, Instructions
 la $a1, Null2
 syscall
-
-
-letGen #Macro for gen
 
 
 

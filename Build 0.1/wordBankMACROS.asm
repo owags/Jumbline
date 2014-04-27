@@ -7,6 +7,9 @@ lb $t1, wordBank($t0)
 addi $t0, $t0, 1
 printChar($t1)
 blt $t0, 140, pwb_loop
+
+li $t0, 10
+printChar($t0)
 .end_macro
 
 
@@ -109,7 +112,7 @@ lw $t0, 0($sp)
 lb $t1, 0($t0)
 addi $t0, $t0, 1
 sw $t0, 0($sp)
-blt $t1, 90, continue
+blt $t1, 91, continue
 subi $t1, $t1, 32
 continue:
 lw $t0, 4($sp)
@@ -137,23 +140,42 @@ addi $sp, $sp, 12
 
 # Iterates through the word bank and tallies the lengths of each word
 # This will be used to initialize the words left tracker
-.macro TallyLengths
-subi $sp, $sp, 12
+.macro tallyLengths
+subi $sp, $sp, 4
+sw $v0, 0($sp)
+
+# clear lengths with new generation
+li $t0, 0
+tl_clearLoop:
+sb $zero, wordsLeft($t0)
+addi $t0, $t0, 1
+blt $t0, 6, tl_clearLoop
 
 tl_loop:
 nextBankWord($v0)
 beqz $v0, tl_return
-bankWordLength($v0)
-subi $t0, $v0, 2
-la $t1, wordsLeft
-add $t1, $t0, $t1
-lb $t0, 0($t1)
-addi $t0, $t0, 1
-sb $t0, 0($t1)
+bankWordLength($v0)	# returns the length of word
+subi $t0, $v0, 2	# acquire offset for tally
+lb $t1, wordsLeft($t0)	#get current count for length
+addi $t1, $t1, 1	# add 1
+sb $t1, wordsLeft($t0)	
 j tl_loop
 
 tl_return:
-addi $sp, $sp, 12
+lw $v0, 0($sp)
+addi $sp, $sp, 4
+.end_macro
+
+#print Words left
+.macro printTally
+li $t0, 0
+pt_loop:
+lb $t1, wordsLeft($t0)
+addi $t0, $t0, 1
+printChar($t1)
+blt $t0, 6, pt_loop
+li $t1, 10
+printChar($t1)
 .end_macro
 
 # Finds the length of the word in wbBuffer

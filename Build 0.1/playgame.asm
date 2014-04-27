@@ -7,9 +7,11 @@ PG_newline: .asciiz "\n"
 
 .text
 letGen
+printLetters
 wordSearch
 printWordBank
-TallyLengths
+tallyLengths
+printTally
 
 #Push saved registers onto stack
 sw $s0, 0($sp)
@@ -37,8 +39,6 @@ la $a0, inputBuffer
 li $a1, 7
 li $v0, 8
 syscall
-
-printWordBank
 
 la $a0, inputBuffer
 li $v0, 4
