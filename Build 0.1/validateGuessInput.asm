@@ -325,7 +325,7 @@ CopyToLettersArray:		# Copy Randomized Array into Letter Array
 	li $t5, 0		#initialize index $t5 to 0
 	
 	Lc3: 			# Loop will copy Randomized Array into Letter Array
-	beq $t5, $t9, GuessWord
+	beq $t5, $t9, doneWithCopyLoop
 		la $t0, Input		# load address Randomized Array
 		la $t1, inputBuffer		# Load address Letters Array
 		add $t0, $t0, $t5		# Index offset + Randomized Array base address, store in $t0
@@ -334,6 +334,8 @@ CopyToLettersArray:		# Copy Randomized Array into Letter Array
 		sb $t2, 0($t0)			# Store character in Letters Array
 	addi $t5,$t5, 1
 	j Lc3
+	
+	doneWithCopyLoop:
 		
 .end_macro 
 	
