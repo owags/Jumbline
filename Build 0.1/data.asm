@@ -2,7 +2,7 @@
 wordBank:	.space	147
 wbCount:	.word	0
 
-letters:	.space	7
+letters:	.space	8
 lCount:		.word	0
 
 inputBuffer: 	.space 7

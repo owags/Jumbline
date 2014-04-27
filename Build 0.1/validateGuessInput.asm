@@ -23,6 +23,8 @@ exitString: 		.asciiz "Execution has EXITED."
 Test: 			.asciiz " "
 MatchFoundTest: 	.asciiz "MATCH FOUND :)"
 validGuessConfirm: 	.asciiz "Your guess is valid! \n Continue Playing?"
+tooMany:		.asciiz "You have entered too many characters!\n\n Would you like to try again?"
+letNotFound:		.asciiz "Character(s) you have used are not allowed.\nPlease use only the letters from generated list.\n\n Would you like to try again?"
 ExitString: 		.ascii "The word you have entered is invalid:\n-Invalid letters used\n OR\n-Too many letters used\n\n Choose YES to guess again."
 			.asciiz "\nNO to EXIT"
 WordBinaryArray: 	.space 7
@@ -82,10 +84,10 @@ Input: 			.space 8
 # Syscall to display guessing instructions. Needed this to test linear model.
 ######
 
-	li $v0, 59			#calls message window to show guessing instructions
-	la $a0, StartGuessMessage
-	la $a1, letters
-	syscall									
+	#li $v0, 59			#calls message window to show guessing instructions
+	#la $a0, StartGuessMessage
+	#la $a1, letters
+	#syscall									
 									
 												
 																		
@@ -109,7 +111,31 @@ beq $a1, -3, Shuffleletters
 	#Check if there are too many characters for input
 	add $t0, $t9, $s0	# add base input array + offset,
 	lb $t1, 0($t0)		# load byte at current position.
-	bgt $t1, 31, error1	# anything above ascii 31 is a potential character
+	bgt $t1, 31, tooManyError	# anything above ascii 31 is a potential character
+	
+	#Force lower case characters to upper case
+				# This works by checkin the range for lower case, forcing to upper, and exiting if MAX position is reached
+	add $t1, $s0, $t9		#Set $t1 to MAX input postion in array, this keeps track for "exitCondition" below
+	loopInputToUpper:
+		lb $t0, ($s0)
+		bgt $t0, 122, letNotFoundError	#if input ascii is greater than 122 "z" than it is not a lower case letter, jump to error
+		bge $t0, 97, letIsLowerCase  	#if input ascii is greater or equal to 97 "a" then it is a lower case
+		nextInputLetter: 
+			addi $s0, $s0, 1		#If failed, go to next letter	
+			beq  $s0, $t1, exitCondition		#If input is at last postion exit loop.
+			j loopInputToUpper
+		
+		letIsLowerCase: 
+			addi $t0, $t0, -32	# force to upper case
+			sb $t0 ($s0)		# store into Input Array
+			addi $s0, $s0, 1	# increment Input array position
+			beq  $s0, $t1, exitCondition		#If input is at last postion exit loop.
+			j loopInputToUpper
+			
+		exitCondition: 
+			la $s0, Input		# make $s0 original address of Input Array
+						# if exit, allow to continue with rest of code
+		
 	
 	#Allow "Press Enter to Shuffle" command
 	lb $t0, ($s0)			#Load character at base address of Input Array
@@ -121,7 +147,7 @@ beq $a1, -3, Shuffleletters
 		lb $t2, ($s2)		#letters Array
 		beq $t0, 10, validGuess		#If Input Array has new line char, means end reached with no errors, guess is valid
 		beq $t0, $zero, validGuess	#First input does not register /n char, therefore if Input Array reaches null, also valid guess
-		beq $t2, $zero, error1		#Checks if Letter Array is null, this means that letter guessed was not found, must exit
+		beq $t2, $zero, letNotFoundError #Checks if Letter Array is null, this means that letter guessed was not found, must exit
 		beq $t2, $t0, matchFound	#If Generated letter matches Guessed letter
 	
 	#else
@@ -146,12 +172,22 @@ beq $a1, -3, Shuffleletters
 		la $s1, WordBinaryArray		#Reset Binary array to original position to being new comparison
 		addi $s0, $s0, 1		#incriment Input Array by 1 to next position 
 		j while
-
+		
+	######	
+	#ERROR MESSAGES
+	#####
+	tooManyError: 		la $a0, tooMany
+				j error1
 			
+	genError: 		la $a0, ExitString
+				j error1
+			
+	letNotFoundError: 	la $a0, letNotFound
+			  	j error1
+					
 	error1:  #If letters array reaches null position = invalid letter OR too long: must EXIT/RETRY
 	
 		li $v0, 50
-		la $a0, ExitString
 		la $a1, Test
 		syscall
 	
@@ -283,6 +319,22 @@ CopyToLettersArray:		# Copy Randomized Array into Letter Array
 	validGuess:
 		#If guess is valid. End the macro.
 		# Correct input is stored in Input Array
+		# Copy Input array into inputBuffer
+		
+	CopyToInputBuffer:	# Copy Input array into inputBuffer array
+	li $t5, 0		#initialize index $t5 to 0
+	
+	Lc3: 			# Loop will copy Randomized Array into Letter Array
+	beq $t5, $t9, GuessWord
+		la $t0, Input		# load address Randomized Array
+		la $t1, inputBuffer		# Load address Letters Array
+		add $t0, $t0, $t5		# Index offset + Randomized Array base address, store in $t0
+		lb $t2, 0($t0)			# Load character in Randomized Array into $t2
+		add $t0, $t1, $t5		# Index offset + Letters Array base address, store in $t0
+		sb $t2, 0($t0)			# Store character in Letters Array
+	addi $t5,$t5, 1
+	j Lc3
+		
 .end_macro 
 	
 
