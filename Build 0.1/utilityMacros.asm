@@ -9,9 +9,17 @@ ble %regIterator, %to, Loop
 
 #Print an integer
 .macro printInt(%reg)
+subi $sp, $sp, 8
+sw $v0, 0($sp)
+sw $a0, 4($sp)
+
 move $a0, %reg
 li $v0, 1
 syscall
+
+lw $v0, 0($sp)
+lw $a0, 4($sp)
+addi $sp, $sp, 8
 .end_macro
 
 #Print a string

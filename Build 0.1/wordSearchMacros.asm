@@ -9,6 +9,7 @@ DTM_eof_str:	.asciiz "Warning [macro dictToMem]: End of File"
 debug_let:	.asciiz "Letters: "
 debug_word:	.asciiz "Words:\n"
 
+
 curWord:	.space 7
 curOffset:	.word 0
 boolChk:	.space 7
@@ -232,7 +233,7 @@ subi $sp, $sp, 4	# decrenent by 4 for stack
 la $s0, wbCount		# load address
 lw $s1, 0($s0)		# load current word bank count
 li $s0, 7		# li immediate 7
-mult $s1, $s2		# multiply 7 * wbCount
+mult $s1, $s0		# multiply 7 * wbCount
 mflo $s1		# retreive from lo
 la $s0, wordBank	# load word bank
 add $s0, $s1, $s0	# Address of wordBank with offset
@@ -242,8 +243,8 @@ la $s1, curWord		# load curWord
 
 SW_loop:
 lb $s2, 0($s1)
-addi $s1, $s1, 1
 sb $s2, 0($s0)
+addi $s1, $s1, 1
 addi $s0, $s0, 1
 lw $s2, 0($sp)
 blt $s0, $s2, SW_loop
@@ -252,6 +253,7 @@ la $s0, wbCount
 lw $s1, 0($s0)
 addi $s1, $s1, 1
 sw $s1, 0($s0)
+addi $sp, $sp, 4
 .end_macro
 
 
@@ -273,15 +275,16 @@ dictEOF($v0)
 beq $v0, 1, _return
 validWord($v0)
 beqz $v0, _search
-printWord
 saveWord
-la $s0, wbCount
-lw $s1, 0($s0)
-bgt $s1, 20, reGenLet
+lw $s1, wbCount
+printInt($s1)	#DEBUG
+printWord	#DEBUG
+beq $s1, 20, reGenLet
 j _search
 
 reGenLet:
 letGenStatic
+printLetters
 la $s0, wbCount
 sw $zero, 0($s0)
 la, $s0, curOffset
