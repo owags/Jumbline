@@ -293,7 +293,7 @@ j _search
 
 _return:
 lw $t0, wbCount
-beqz $t0, reGenLet
+blt $t0, 6, reGenLet
 
 la, $s0, curOffset
 sw $zero, 0($s0)
