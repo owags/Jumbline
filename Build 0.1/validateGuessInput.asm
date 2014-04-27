@@ -319,6 +319,22 @@ CopyToLettersArray:		# Copy Randomized Array into Letter Array
 	validGuess:
 		#If guess is valid. End the macro.
 		# Correct input is stored in Input Array
+		# Copy Input array into inputBuffer
+		
+	CopyToInputBuffer:	# Copy Input array into inputBuffer array
+	li $t5, 0		#initialize index $t5 to 0
+	
+	Lc3: 			# Loop will copy Randomized Array into Letter Array
+	beq $t5, $t9, GuessWord
+		la $t0, Input		# load address Randomized Array
+		la $t1, inputBuffer		# Load address Letters Array
+		add $t0, $t0, $t5		# Index offset + Randomized Array base address, store in $t0
+		lb $t2, 0($t0)			# Load character in Randomized Array into $t2
+		add $t0, $t1, $t5		# Index offset + Letters Array base address, store in $t0
+		sb $t2, 0($t0)			# Store character in Letters Array
+	addi $t5,$t5, 1
+	j Lc3
+		
 .end_macro 
 	
 
