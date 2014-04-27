@@ -228,9 +228,14 @@ move %length, $t1
 .macro compareInput(%bool)
 ci_loop:
 nextBankWord($v0)
-beqz $v0, ci_noMatch
+move $t0, $v0
+printInt($t0)
+beqz $t0, ci_noMatch
 compWord($v0)
-beq $v0, 1, ci_match
+move $t0, $v0
+printInt($t0)
+endl
+beq $t0, 1, ci_match
 j ci_loop
 
 ci_noMatch:
